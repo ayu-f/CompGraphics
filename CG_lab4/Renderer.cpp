@@ -11,7 +11,7 @@ struct Vertex {
 	float x, y, z;
 };
 
-struct TextureVertex{
+struct TextureVertex {
 	float x, y, z;
 	float u, v;
 };
@@ -229,14 +229,14 @@ HRESULT Renderer::InitTextures() {
 		UINT32 blockHeight = Up(desc.Height, 4u);
 		UINT32 pitch = blockWidth * GetBytesPerBlock(desc.Format);
 		D3D11_SUBRESOURCE_DATA data[6];
-		for (int i = 0; i < 6; i++){
+		for (int i = 0; i < 6; i++) {
 			data[i].pSysMem = texDescs[i].pData;
 			data[i].SysMemPitch = pitch;
 			data[i].SysMemSlicePitch = 0;
 		}
 		result = m_pDevice->CreateTexture2D(&desc, data, &m_pCubemapTexture);
 		assert(SUCCEEDED(result));
-		if (SUCCEEDED(result)){
+		if (SUCCEEDED(result)) {
 			result = SetResourceName(m_pCubemapTexture, "CubemapTexture");
 		}
 	}
@@ -260,9 +260,9 @@ HRESULT Renderer::InitTextures() {
 HRESULT Renderer::InitShaders() {
 	std::vector<Vertex> sphereVertices;
 	std::vector<USHORT> sphereIndices;
-	int hRes = 20;
-	int wRes = 10;
-	float rad = 1.2f;
+	int hRes = 18;
+	int wRes = 8;
+	float rad = 1.1f;
 
 	for (int w = 0; w <= wRes; w++)
 	{
@@ -374,7 +374,7 @@ HRESULT Renderer::InitShaders() {
 		data.SysMemSlicePitch = 0;
 
 		result = m_pDevice->CreateBuffer(&desc, &data, &m_pSphereIndexBuffer);
-		if (SUCCEEDED(result)){
+		if (SUCCEEDED(result)) {
 			result = SetResourceName(m_pSphereIndexBuffer, "SphereIndexBuffer");
 		}
 	}
@@ -392,7 +392,7 @@ HRESULT Renderer::InitShaders() {
 		data.SysMemSlicePitch = 0;
 
 		result = m_pDevice->CreateBuffer(&desc, &data, &m_pCubeVertexBuffer);
-		if (SUCCEEDED(result)){
+		if (SUCCEEDED(result)) {
 			result = SetResourceName(m_pCubeVertexBuffer, "CubeVertexBuffer");
 		}
 	}
@@ -410,7 +410,7 @@ HRESULT Renderer::InitShaders() {
 		data.SysMemSlicePitch = 0;
 
 		result = m_pDevice->CreateBuffer(&desc, &data, &m_pCubeIndexBuffer);
-		if (SUCCEEDED(result)){
+		if (SUCCEEDED(result)) {
 			result = SetResourceName(m_pCubeIndexBuffer, "CubeIndexBuffer");
 		}
 	}
@@ -476,7 +476,7 @@ HRESULT Renderer::InitShaders() {
 
 	if (SUCCEEDED(result))
 	{
-		result = CompileShader(L"Skybox_VS.hlsl",(ID3D11DeviceChild**)&m_pSkyboxVS, "vs", &pVertexShaderCode);
+		result = CompileShader(L"Skybox_VS.hlsl", (ID3D11DeviceChild**)&m_pSkyboxVS, "vs", &pVertexShaderCode);
 	}
 	if (SUCCEEDED(result))
 	{
