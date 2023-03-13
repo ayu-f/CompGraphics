@@ -149,7 +149,7 @@ HRESULT Renderer::InitTextures() {
 
 		UINT32 blockWidth = Up(desc.Width, 4u);
 		UINT32 blockHeight = Up(desc.Height, 4u);
-		UINT32 pitch = blockWidth * GetBytesPerBlock(desc.Format);
+		UINT32 pitch = blockWidth * UINT32(GetBytesPerBlock(desc.Format));
 		const char* pSrcData = reinterpret_cast<const char*>(textureDesc.pData);
 		std::vector<D3D11_SUBRESOURCE_DATA> data;
 		data.resize(desc.MipLevels);
@@ -161,7 +161,7 @@ HRESULT Renderer::InitTextures() {
 			pSrcData += pitch * size_t(blockHeight);
 			blockHeight = max(1u, blockHeight / 2);
 			blockWidth = max(1u, blockWidth / 2);
-			pitch = blockWidth * GetBytesPerBlock(desc.Format);
+			pitch = blockWidth * UINT32(GetBytesPerBlock(desc.Format));
 		}
 		result = m_pDevice->CreateTexture2D(&desc, data.data(), &m_pKitTexture);
 
@@ -227,7 +227,7 @@ HRESULT Renderer::InitTextures() {
 		desc.Width = texDescs[0].width;
 		UINT32 blockWidth = Up(desc.Width, 4u);
 		UINT32 blockHeight = Up(desc.Height, 4u);
-		UINT32 pitch = blockWidth * GetBytesPerBlock(desc.Format);
+		UINT32 pitch = blockWidth * UINT32(GetBytesPerBlock(desc.Format));
 		D3D11_SUBRESOURCE_DATA data[6];
 		for (int i = 0; i < 6; i++) {
 			data[i].pSysMem = texDescs[i].pData;
@@ -344,7 +344,7 @@ HRESULT Renderer::InitShaders() {
 	HRESULT result;
 	{
 		D3D11_BUFFER_DESC desc = {};
-		desc.ByteWidth = sizeof(Vertex) * sphereVertices.size();
+		desc.ByteWidth = sizeof(Vertex) * UINT32(sphereVertices.size());
 		desc.Usage = D3D11_USAGE_IMMUTABLE;
 		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		desc.CPUAccessFlags = 0;
@@ -352,7 +352,7 @@ HRESULT Renderer::InitShaders() {
 		desc.StructureByteStride = 0;
 		D3D11_SUBRESOURCE_DATA data;
 		data.pSysMem = sphereVertices.data();
-		data.SysMemPitch = sizeof(Vertex) * sphereVertices.size();
+		data.SysMemPitch = sizeof(Vertex) * UINT32(sphereVertices.size());
 		data.SysMemSlicePitch = 0;
 
 		result = m_pDevice->CreateBuffer(&desc, &data, &m_pSphereVertexBuffer);
@@ -362,7 +362,7 @@ HRESULT Renderer::InitShaders() {
 	}
 	{
 		D3D11_BUFFER_DESC desc = {};
-		desc.ByteWidth = sizeof(USHORT) * sphereIndices.size();
+		desc.ByteWidth = sizeof(UINT32) * UINT32(sphereIndices.size());
 		desc.Usage = D3D11_USAGE_IMMUTABLE;
 		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		desc.CPUAccessFlags = 0;
@@ -370,7 +370,7 @@ HRESULT Renderer::InitShaders() {
 		desc.StructureByteStride = 0;
 		D3D11_SUBRESOURCE_DATA data;
 		data.pSysMem = sphereIndices.data();
-		data.SysMemPitch = sizeof(USHORT) * sphereIndices.size();
+		data.SysMemPitch = sizeof(UINT32) * UINT32(sphereIndices.size());
 		data.SysMemSlicePitch = 0;
 
 		result = m_pDevice->CreateBuffer(&desc, &data, &m_pSphereIndexBuffer);
@@ -560,6 +560,10 @@ void Renderer::Clean() {
 	SafeRelease(m_pSkyboxInputLayout);
 	SafeRelease(m_pSkyboxPS);
 	SafeRelease(m_pSkyboxVS);
+	SafeRelease(m_pSphereVertexBuffer);
+	SafeRelease(m_pSphereIndexBuffer);
+	SafeRelease(m_pCubeVertexBuffer);
+	SafeRelease(m_pCubeIndexBuffer);
 
 	SafeRelease(m_pTextureInputLayout);
 	SafeRelease(m_pTexturePS);
@@ -653,9 +657,10 @@ bool Renderer::Render()
 		ID3D11Buffer* vertexBuffers[] = { m_pSphereVertexBuffer };
 		UINT strides[] = { sizeof(Vertex) };
 		UINT offsets[] = { 0 };
+
 		m_pDeviceContext->IASetVertexBuffers(0, 1, vertexBuffers, strides, offsets);
 
-		m_pDeviceContext->DrawIndexed(1000, 0, 0);
+		m_pDeviceContext->DrawIndexed(756u, 0, 0);
 	}
 	{
 		SceneBuffer sceneBuffer = { pSceneManager.m_modelTransform };
