@@ -47,9 +47,6 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="LoadDDS.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
